@@ -1,0 +1,402 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: SAGE - Smart Nutrition Tracker API
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: meals
+    description: Meal search and management
+  - name: logs
+    description: Daily food logging
+  - name: summary
+    description: Nutrition summaries
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      description: Returns server health status
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  /meals/search:
+    get:
+      operationId: searchMeals
+      tags: [meals]
+      summary: Search meals by name
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Search query string
+      responses:
+        "200":
+          description: List of matching meals
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Meal"
+
+  /meals:
+    get:
+      operationId: listMeals
+      tags: [meals]
+      summary: List all meals
+      responses:
+        "200":
+          description: All meals
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Meal"
+
+  /logs/today:
+    get:
+      operationId: getTodayLog
+      tags: [logs]
+      summary: Get today's food log with entries
+      responses:
+        "200":
+          description: Today's log with entries
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DailyLogWithEntries"
+
+  /logs/add:
+    post:
+      operationId: addLogEntry
+      tags: [logs]
+      summary: Add a meal to today's log
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddLogEntryBody"
+      responses:
+        "201":
+          description: Created log entry
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LogEntry"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Meal not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /logs/remove/{entryId}:
+    delete:
+      operationId: removeLogEntry
+      tags: [logs]
+      summary: Remove a log entry
+      parameters:
+        - name: entryId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Entry removed
+        "404":
+          description: Entry not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /logs/update/{entryId}:
+    patch:
+      operationId: updateLogEntry
+      tags: [logs]
+      summary: Update a log entry's quantity
+      parameters:
+        - name: entryId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateLogEntryBody"
+      responses:
+        "200":
+          description: Updated log entry
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LogEntry"
+        "404":
+          description: Entry not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /logs/daily:
+    get:
+      operationId: getDailyLogs
+      tags: [logs]
+      summary: Get daily logs for a given date range
+      parameters:
+        - name: date
+          in: query
+          required: false
+          schema:
+            type: string
+          description: "Date in YYYY-MM-DD format (defaults to today)"
+      responses:
+        "200":
+          description: Daily log with totals
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DailyLogWithEntries"
+
+  /logs/weekly:
+    get:
+      operationId: getWeeklyLogs
+      tags: [logs]
+      summary: Get aggregated logs for the past 7 days
+      responses:
+        "200":
+          description: Weekly summary with per-day totals
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WeeklySummary"
+
+  /logs/cleanup:
+    post:
+      operationId: cleanupOldLogs
+      tags: [logs]
+      summary: Delete logs older than 7 days
+      responses:
+        "200":
+          description: Cleanup result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CleanupResult"
+
+  /summary/daily:
+    get:
+      operationId: getDailySummary
+      tags: [summary]
+      summary: Get nutrition totals for today
+      responses:
+        "200":
+          description: Daily nutrition totals
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NutritionTotals"
+
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+
+    Meal:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        calories:
+          type: number
+        protein:
+          type: number
+        carbs:
+          type: number
+        fats:
+          type: number
+        servingSize:
+          type: string
+        category:
+          type: string
+      required:
+        - id
+        - name
+        - calories
+        - protein
+        - carbs
+        - fats
+        - servingSize
+        - category
+
+    LogEntry:
+      type: object
+      properties:
+        id:
+          type: integer
+        mealId:
+          type: integer
+        dailyLogId:
+          type: integer
+        quantity:
+          type: number
+        meal:
+          $ref: "#/components/schemas/Meal"
+      required:
+        - id
+        - mealId
+        - dailyLogId
+        - quantity
+        - meal
+
+    DailyLogWithEntries:
+      type: object
+      properties:
+        id:
+          type: integer
+        date:
+          type: string
+        entries:
+          type: array
+          items:
+            $ref: "#/components/schemas/LogEntry"
+        totals:
+          $ref: "#/components/schemas/NutritionTotals"
+      required:
+        - id
+        - date
+        - entries
+        - totals
+
+    NutritionTotals:
+      type: object
+      properties:
+        calories:
+          type: number
+        protein:
+          type: number
+        carbs:
+          type: number
+        fats:
+          type: number
+      required:
+        - calories
+        - protein
+        - carbs
+        - fats
+
+    DayAggregate:
+      type: object
+      properties:
+        date:
+          type: string
+        calories:
+          type: number
+        protein:
+          type: number
+        carbs:
+          type: number
+        fats:
+          type: number
+        entryCount:
+          type: integer
+      required:
+        - date
+        - calories
+        - protein
+        - carbs
+        - fats
+        - entryCount
+
+    WeeklySummary:
+      type: object
+      properties:
+        days:
+          type: array
+          items:
+            $ref: "#/components/schemas/DayAggregate"
+        highestCalorieDay:
+          type: ["string", "null"]
+        lowestCalorieDay:
+          type: ["string", "null"]
+        averageCalories:
+          type: number
+        totalDaysLogged:
+          type: integer
+      required:
+        - days
+        - highestCalorieDay
+        - lowestCalorieDay
+        - averageCalories
+        - totalDaysLogged
+
+    AddLogEntryBody:
+      type: object
+      properties:
+        mealId:
+          type: integer
+        quantity:
+          type: number
+      required:
+        - mealId
+        - quantity
+
+    UpdateLogEntryBody:
+      type: object
+      properties:
+        quantity:
+          type: number
+      required:
+        - quantity
+
+    CleanupResult:
+      type: object
+      properties:
+        deletedLogs:
+          type: integer
+        message:
+          type: string
+      required:
+        - deletedLogs
+        - message
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error

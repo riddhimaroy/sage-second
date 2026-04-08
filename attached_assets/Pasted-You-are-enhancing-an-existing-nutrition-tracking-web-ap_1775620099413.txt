@@ -1,0 +1,204 @@
+You are enhancing an existing nutrition tracking web app built with React (frontend) and a backend (Django/Node).
+
+Your goal is to implement a **User Profile + Personalized Goals System + Smart Nutrient Targets + Calorie Burn Suggestions Tab**.
+
+---
+
+## 🧩 FEATURE 1: USER PROFILE (MANDATORY INPUT)
+
+Create a user profile system where each user must enter:
+
+* Age (integer)
+* Gender (male/female/other)
+* Height (cm)
+* Weight (kg)
+* Activity Level:
+
+  * sedentary
+  * light
+  * moderate
+  * active
+* Goal:
+
+  * Lose weight
+  * Maintain weight
+  * Gain weight
+
+---
+
+## 🔥 FEATURE 2: DAILY CALORIE GOAL
+
+Use Mifflin-St Jeor Equation:
+
+Men:
+BMR = 10×weight + 6.25×height − 5×age + 5
+
+Women:
+BMR = 10×weight + 6.25×height − 5×age − 161
+
+Apply activity multiplier:
+
+* sedentary → 1.2
+* light → 1.375
+* moderate → 1.55
+* active → 1.725
+
+Adjust based on goal:
+
+* lose → −300 to −500 kcal
+* gain → +300 to +500 kcal
+* maintain → no change
+
+Store and display daily calorie target.
+
+---
+
+## 🥗 FEATURE 3: SMART NUTRIENT GOALS (IMPORTANT)
+
+### 🧠 PROTEIN (BASED ON BODY WEIGHT)
+
+Use scientifically grounded ranges:
+
+* sedentary → **0.8 g/kg**
+* light → **1.0 g/kg**
+* moderate → **1.2–1.6 g/kg**
+* active → **1.6–2.0 g/kg**
+
+Default:
+
+* Pick midpoint for ranges (e.g., moderate → 1.4 g/kg)
+
+---
+
+### ⚙️ CUSTOMIZATION (IMPORTANT)
+
+Allow user to:
+
+* Override protein target manually
+* Store custom value if changed
+* Toggle:
+
+  * "Use recommended"
+  * "Custom value"
+
+---
+
+### 🍞 CARBS & 🧈 FATS
+
+After protein is calculated:
+
+Remaining calories = total_calories − protein_calories
+
+Split remaining:
+
+* 60% → carbs
+* 40% → fats
+
+Convert:
+
+* carbs: 1g = 4 kcal
+* fats: 1g = 9 kcal
+
+---
+
+### 📊 OUTPUT
+
+Store and show:
+
+* Calories target
+* Protein (g)
+* Carbs (g)
+* Fats (g)
+
+---
+
+## 📊 DASHBOARD UPDATE
+
+Dashboard must now show dynamic goals:
+
+* Target calories
+* Consumed calories
+* Remaining calories
+
+Macronutrients:
+
+* Protein: target vs consumed
+* Carbs: target vs consumed
+* Fats: target vs consumed
+
+---
+
+## 🏋️ FEATURE 4: "BURN CALORIES" TAB
+
+Add tab: **Burn Calories**
+
+Input:
+
+* extra calories (consumed − target)
+
+---
+
+### Exercises:
+
+| Exercise | Calories / 30 min |
+| -------- | ----------------- |
+| Walking  | 120               |
+| Running  | 300               |
+| Cycling  | 250               |
+| Skipping | 350               |
+| Yoga     | 150               |
+
+---
+
+### Logic:
+
+time_required = (extra_calories / calories_per_30min) × 30
+
+---
+
+### Output:
+
+* Running → X min
+* Walking → X min
+* Cycling → X min
+
+---
+
+## 🎨 UI REQUIREMENTS
+
+* Use existing UI (Tailwind/shadcn)
+* Add:
+
+  * Profile tab
+  * Burn Calories tab
+* Add toggle for protein customization
+* Do not redesign entire UI
+
+---
+
+## 🧠 CODE STRUCTURE
+
+* utils/health.js → BMR + macro logic
+* components/ProfileForm.jsx
+* components/NutrientGoals.jsx
+* components/BurnCalculator.jsx
+
+---
+
+## 🔒 VALIDATION
+
+* Age = integer only
+* Weight/height positive
+* Protein custom input must be valid number
+* No empty fields
+
+---
+
+## 💡 DESIGN GOAL
+
+Keep implementation:
+
+* simple
+* readable
+* student-level (not overengineered)
+* realistic and grounded in actual nutrition science
