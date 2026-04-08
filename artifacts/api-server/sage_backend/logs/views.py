@@ -14,6 +14,19 @@ from .models import DailyLog, LogEntry
 from .serializers import DailyLogSerializer, WeeklySummarySerializer
 
 
+def parse_positive_integer_quantity(raw_quantity):
+    """Validate that quantity is a positive integer serving count."""
+    try:
+        quantity = float(raw_quantity)
+    except (TypeError, ValueError):
+        raise ValueError("quantity must be a positive integer")
+
+    if not quantity.is_integer() or quantity <= 0:
+        raise ValueError("quantity must be a positive integer")
+
+    return int(quantity)
+
+
 def today_str():
     """Return today's date as a YYYY-MM-DD string."""
     return date.today().isoformat()
@@ -65,7 +78,7 @@ def get_today_log(request):
 def add_log_entry(request):
     """
     POST /api/logs/add
-    Body: { mealId: int, quantity: float }
+    Body: { mealId: int, quantity: int }
     Add a meal to today's food log. Creates today's DailyLog if needed.
     """
     meal_id = request.data.get("mealId")
@@ -76,11 +89,9 @@ def add_log_entry(request):
         return Response({"error": "mealId and quantity are required"}, status=status.HTTP_400_BAD_REQUEST)
 
     try:
-        quantity = float(quantity)
-        if quantity <= 0:
-            raise ValueError
-    except (TypeError, ValueError):
-        return Response({"error": "quantity must be a positive number"}, status=status.HTTP_400_BAD_REQUEST)
+        quantity = parse_positive_integer_quantity(quantity)
+    except ValueError as exc:
+        return Response({"error": str(exc)}, status=status.HTTP_400_BAD_REQUEST)
 
     # Verify the meal exists
     try:
@@ -138,7 +149,7 @@ def remove_log_entry(request, entry_id):
 def update_log_entry(request, entry_id):
     """
     PATCH /api/logs/update/<entry_id>
-    Body: { quantity: float }
+    Body: { quantity: int }
     Update the quantity (serving size) of an existing log entry.
     """
     try:
@@ -149,11 +160,9 @@ def update_log_entry(request, entry_id):
 
     quantity = request.data.get("quantity")
     try:
-        quantity = float(quantity)
-        if quantity <= 0:
-            raise ValueError
-    except (TypeError, ValueError):
-        return Response({"error": "quantity must be a positive number"}, status=status.HTTP_400_BAD_REQUEST)
+        quantity = parse_positive_integer_quantity(quantity)
+    except ValueError as exc:
+        return Response({"error": str(exc)}, status=status.HTTP_400_BAD_REQUEST)
 
     entry.quantity = quantity
     entry.save()
