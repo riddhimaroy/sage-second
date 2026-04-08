@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
-import { User, ChevronRight, ToggleLeft, ToggleRight } from "lucide-react";
+import { User, ChevronRight, ToggleLeft, ToggleRight, KeyRound, Trash2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
@@ -41,6 +41,13 @@ export default function ProfileSetup() {
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
+  const [passwordForm, setPasswordForm] = useState({
+    current_password: "",
+    new_password: "",
+    confirm_password: "",
+  });
+  const [passwordLoading, setPasswordLoading] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   function set(field: string, value: string | boolean) {
     setForm((f) => ({ ...f, [field]: value }));
@@ -151,6 +158,94 @@ export default function ProfileSetup() {
           form.use_custom_protein,
         )
       : null;
+
+  async function handlePasswordChange(e: React.FormEvent) {
+    e.preventDefault();
+
+    if (!passwordForm.current_password || !passwordForm.new_password) {
+      toast({ title: "Missing fields", description: "Enter your current and new password.", variant: "destructive" });
+      return;
+    }
+
+    if (passwordForm.new_password.length < 6) {
+      toast({ title: "Password too short", description: "New password must be at least 6 characters.", variant: "destructive" });
+      return;
+    }
+
+    if (passwordForm.new_password !== passwordForm.confirm_password) {
+      toast({ title: "Passwords do not match", description: "Confirm your new password to continue.", variant: "destructive" });
+      return;
+    }
+
+    setPasswordLoading(true);
+    try {
+      const res = await fetch("/api/auth/change-password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Token ${token}`,
+        },
+        body: JSON.stringify({
+          current_password: passwordForm.current_password,
+          new_password: passwordForm.new_password,
+        }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        const firstFieldError = Object.values(data).find(
+          (value) => Array.isArray(value) && typeof value[0] === "string",
+        ) as string[] | undefined;
+        toast({
+          title: "Password not changed",
+          description: data.error || firstFieldError?.[0] || "Please try again.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      localStorage.setItem("sage_token", data.token);
+      setPasswordForm({ current_password: "", new_password: "", confirm_password: "" });
+      toast({ title: "Password updated", description: "Your account password has been changed." });
+    } catch {
+      toast({ title: "Error", description: "Could not change password.", variant: "destructive" });
+    } finally {
+      setPasswordLoading(false);
+    }
+  }
+
+  async function handleDeleteAccount() {
+    const confirmed = window.confirm("Delete your account permanently? This will remove your profile and logs.");
+    if (!confirmed) return;
+
+    setDeleteLoading(true);
+    try {
+      const res = await fetch("/api/auth/profile", {
+        method: "DELETE",
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        toast({
+          title: "Could not delete account",
+          description: data.error || "Please try again.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      await logout();
+      toast({ title: "Account deleted", description: "Your account has been removed." });
+      navigate("/auth");
+    } catch {
+      toast({ title: "Error", description: "Could not delete account.", variant: "destructive" });
+    } finally {
+      setDeleteLoading(false);
+    }
+  }
 
   return (
     <AppLayout>
@@ -326,6 +421,65 @@ export default function ProfileSetup() {
             {!loading && <ChevronRight className="w-4 h-4 ml-1" />}
           </Button>
         </form>
+
+        <Card className="shadow-none">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base flex items-center gap-2">
+              <KeyRound className="w-4 h-4" />
+              Security
+            </CardTitle>
+            <CardDescription>Change your account password.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handlePasswordChange} className="space-y-3">
+              <div className="space-y-1.5">
+                <Label>Current Password</Label>
+                <Input
+                  type="password"
+                  value={passwordForm.current_password}
+                  onChange={(e) => setPasswordForm((prev) => ({ ...prev, current_password: e.target.value }))}
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label>New Password</Label>
+                <Input
+                  type="password"
+                  value={passwordForm.new_password}
+                  onChange={(e) => setPasswordForm((prev) => ({ ...prev, new_password: e.target.value }))}
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label>Confirm New Password</Label>
+                <Input
+                  type="password"
+                  value={passwordForm.confirm_password}
+                  onChange={(e) => setPasswordForm((prev) => ({ ...prev, confirm_password: e.target.value }))}
+                />
+              </div>
+              <Button type="submit" variant="outline" disabled={passwordLoading}>
+                {passwordLoading ? "Updating..." : "Change Password"}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+
+        <Card className="shadow-none border-destructive/30 bg-destructive/5">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base flex items-center gap-2 text-destructive">
+              <Trash2 className="w-4 h-4" />
+              Danger Zone
+            </CardTitle>
+            <CardDescription>Delete your account permanently.</CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-sm text-muted-foreground">
+              This permanently deletes your account and associated profile data.
+            </p>
+            <Button type="button" variant="destructive" disabled={deleteLoading} onClick={handleDeleteAccount}>
+              {deleteLoading ? "Deleting..." : "Delete Account"}
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     </AppLayout>
   );
