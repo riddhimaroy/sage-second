@@ -44,9 +44,9 @@ def compute_totals(entries_qs):
     return totals
 
 
+@api_view(["GET"])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-@api_view(["GET"])
 def get_today_log(request):
     """
     GET /api/logs/today
@@ -59,9 +59,9 @@ def get_today_log(request):
     return Response(serializer.data)
 
 
+@api_view(["POST"])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-@api_view(["POST"])
 def add_log_entry(request):
     """
     POST /api/logs/add
@@ -114,9 +114,9 @@ def add_log_entry(request):
     )
 
 
+@api_view(["DELETE"])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-@api_view(["DELETE"])
 def remove_log_entry(request, entry_id):
     """
     DELETE /api/logs/remove/<entry_id>
@@ -132,9 +132,9 @@ def remove_log_entry(request, entry_id):
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+@api_view(["PATCH"])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-@api_view(["PATCH"])
 def update_log_entry(request, entry_id):
     """
     PATCH /api/logs/update/<entry_id>
@@ -179,9 +179,9 @@ def update_log_entry(request, entry_id):
     )
 
 
+@api_view(["GET"])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-@api_view(["GET"])
 def get_daily_logs(request):
     """
     GET /api/logs/daily?date=YYYY-MM-DD
@@ -194,9 +194,9 @@ def get_daily_logs(request):
     return Response(serializer.data)
 
 
+@api_view(["GET"])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-@api_view(["GET"])
 def get_weekly_logs(request):
     """
     GET /api/logs/weekly
@@ -255,9 +255,9 @@ def get_weekly_logs(request):
     return Response(serializer.data)
 
 
+@api_view(["POST"])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-@api_view(["POST"])
 def cleanup_old_logs(request):
     """
     POST /api/logs/cleanup
@@ -278,9 +278,9 @@ def cleanup_old_logs(request):
     )
 
 
+@api_view(["GET"])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-@api_view(["GET"])
 def get_daily_summary(request):
     """
     GET /api/summary/daily

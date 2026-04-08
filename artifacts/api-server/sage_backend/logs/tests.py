@@ -68,3 +68,10 @@ class DailyLogUserIsolationTests(TestCase):
 
         self.assertEqual(data["entries"], [])
         self.assertEqual(data["totals"]["calories"], 0.0)
+
+    def test_today_log_requires_authentication(self):
+        client = APIClient()
+
+        response = client.get("/api/logs/today")
+
+        self.assertEqual(response.status_code, 401)

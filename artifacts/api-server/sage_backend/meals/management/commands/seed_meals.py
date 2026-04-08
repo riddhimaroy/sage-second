@@ -200,6 +200,151 @@ SAMPLE_MEALS = [
     {"name": "Sarson Da Saag", "calories": 200, "protein": 9, "carbs": 20, "fats": 9, "serving_size": "1 cup (200g)", "category": "North Indian"},
     {"name": "Makki Di Roti", "calories": 170, "protein": 4, "carbs": 32, "fats": 4, "serving_size": "1 roti (60g)", "category": "North Indian"},
     {"name": "Stuffed Paratha (mixed)", "calories": 320, "protein": 8, "carbs": 48, "fats": 12, "serving_size": "1 paratha", "category": "North Indian"},
+
+    # Additional global breakfast
+    {"name": "Pancakes", "calories": 227, "protein": 6, "carbs": 28, "fats": 10, "serving_size": "2 pancakes", "category": "Breakfast"},
+    {"name": "French Toast", "calories": 250, "protein": 9, "carbs": 27, "fats": 11, "serving_size": "2 slices", "category": "Breakfast"},
+    {"name": "Bagel", "calories": 245, "protein": 10, "carbs": 48, "fats": 1.5, "serving_size": "1 bagel", "category": "Breakfast"},
+    {"name": "Croissant", "calories": 231, "protein": 5, "carbs": 26, "fats": 12, "serving_size": "1 piece", "category": "Breakfast"},
+    {"name": "Waffles", "calories": 218, "protein": 6, "carbs": 25, "fats": 10, "serving_size": "2 waffles", "category": "Breakfast"},
+    {"name": "Breakfast Burrito", "calories": 320, "protein": 18, "carbs": 28, "fats": 15, "serving_size": "1 burrito", "category": "Breakfast"},
+    {"name": "Egg White Omelette", "calories": 120, "protein": 20, "carbs": 3, "fats": 3, "serving_size": "1 omelette", "category": "Breakfast"},
+    {"name": "Hash Browns", "calories": 143, "protein": 2, "carbs": 15, "fats": 9, "serving_size": "1 patty", "category": "Breakfast"},
+    {"name": "Granola", "calories": 220, "protein": 5, "carbs": 32, "fats": 8, "serving_size": "1/2 cup", "category": "Breakfast"},
+    {"name": "Muesli", "calories": 190, "protein": 6, "carbs": 33, "fats": 4, "serving_size": "1/2 cup dry", "category": "Breakfast"},
+
+    # Additional proteins and seafood
+    {"name": "Chicken Thigh (roasted)", "calories": 209, "protein": 26, "carbs": 0, "fats": 11, "serving_size": "100g", "category": "Protein"},
+    {"name": "Pork Chop", "calories": 231, "protein": 25, "carbs": 0, "fats": 14, "serving_size": "100g", "category": "Protein"},
+    {"name": "Tofu", "calories": 144, "protein": 17, "carbs": 3, "fats": 8, "serving_size": "100g", "category": "Protein"},
+    {"name": "Tempeh", "calories": 193, "protein": 20, "carbs": 9, "fats": 11, "serving_size": "100g", "category": "Protein"},
+    {"name": "Shrimp (boiled)", "calories": 99, "protein": 24, "carbs": 0.2, "fats": 0.3, "serving_size": "100g", "category": "Protein"},
+    {"name": "Sardines", "calories": 208, "protein": 25, "carbs": 0, "fats": 11, "serving_size": "100g", "category": "Protein"},
+    {"name": "Prawns (grilled)", "calories": 110, "protein": 23, "carbs": 1, "fats": 1.5, "serving_size": "100g", "category": "Protein"},
+    {"name": "Paneer Bhurji", "calories": 265, "protein": 16, "carbs": 8, "fats": 18, "serving_size": "1 cup", "category": "Protein"},
+
+    # More grains and staples
+    {"name": "White Rice", "calories": 205, "protein": 4.3, "carbs": 45, "fats": 0.4, "serving_size": "1 cup cooked", "category": "Grains"},
+    {"name": "Couscous", "calories": 176, "protein": 6, "carbs": 36, "fats": 0.3, "serving_size": "1 cup cooked", "category": "Grains"},
+    {"name": "Barley", "calories": 193, "protein": 3.5, "carbs": 44, "fats": 0.7, "serving_size": "1 cup cooked", "category": "Grains"},
+    {"name": "Millet", "calories": 207, "protein": 6, "carbs": 41, "fats": 1.7, "serving_size": "1 cup cooked", "category": "Grains"},
+    {"name": "Corn Tortilla", "calories": 104, "protein": 3, "carbs": 22, "fats": 1.5, "serving_size": "2 tortillas", "category": "Grains"},
+    {"name": "Flour Tortilla", "calories": 144, "protein": 4, "carbs": 24, "fats": 4, "serving_size": "1 tortilla", "category": "Grains"},
+    {"name": "Baguette", "calories": 180, "protein": 6, "carbs": 36, "fats": 1, "serving_size": "75g", "category": "Grains"},
+    {"name": "Pita Bread", "calories": 170, "protein": 6, "carbs": 35, "fats": 1, "serving_size": "1 pita", "category": "Grains"},
+
+    # More vegetables
+    {"name": "Carrots", "calories": 50, "protein": 1, "carbs": 12, "fats": 0.3, "serving_size": "1 cup chopped", "category": "Vegetables"},
+    {"name": "Cauliflower", "calories": 27, "protein": 2, "carbs": 5, "fats": 0.3, "serving_size": "1 cup", "category": "Vegetables"},
+    {"name": "Green Beans", "calories": 44, "protein": 2.4, "carbs": 10, "fats": 0.3, "serving_size": "1 cup", "category": "Vegetables"},
+    {"name": "Cucumber", "calories": 16, "protein": 0.7, "carbs": 4, "fats": 0.1, "serving_size": "1 cup sliced", "category": "Vegetables"},
+    {"name": "Zucchini", "calories": 27, "protein": 2, "carbs": 5, "fats": 0.4, "serving_size": "1 cup", "category": "Vegetables"},
+    {"name": "Mushrooms", "calories": 22, "protein": 3, "carbs": 3, "fats": 0.3, "serving_size": "100g", "category": "Vegetables"},
+    {"name": "Asparagus", "calories": 27, "protein": 3, "carbs": 5, "fats": 0.2, "serving_size": "1 cup", "category": "Vegetables"},
+    {"name": "Cabbage", "calories": 22, "protein": 1.1, "carbs": 5, "fats": 0.1, "serving_size": "1 cup shredded", "category": "Vegetables"},
+
+    # More fruits
+    {"name": "Mango", "calories": 99, "protein": 1.4, "carbs": 25, "fats": 0.6, "serving_size": "1 cup sliced", "category": "Fruit"},
+    {"name": "Pineapple", "calories": 82, "protein": 0.9, "carbs": 22, "fats": 0.2, "serving_size": "1 cup", "category": "Fruit"},
+    {"name": "Watermelon", "calories": 46, "protein": 0.9, "carbs": 11, "fats": 0.2, "serving_size": "1 cup", "category": "Fruit"},
+    {"name": "Grapes", "calories": 104, "protein": 1.1, "carbs": 27, "fats": 0.2, "serving_size": "1 cup", "category": "Fruit"},
+    {"name": "Pear", "calories": 101, "protein": 0.6, "carbs": 27, "fats": 0.3, "serving_size": "1 medium", "category": "Fruit"},
+    {"name": "Kiwi", "calories": 42, "protein": 0.8, "carbs": 10, "fats": 0.4, "serving_size": "1 medium", "category": "Fruit"},
+    {"name": "Papaya", "calories": 55, "protein": 0.9, "carbs": 14, "fats": 0.2, "serving_size": "1 cup", "category": "Fruit"},
+    {"name": "Guava", "calories": 112, "protein": 4.2, "carbs": 24, "fats": 1.6, "serving_size": "1 cup", "category": "Fruit"},
+    {"name": "Pomegranate", "calories": 144, "protein": 3, "carbs": 32, "fats": 2, "serving_size": "1 cup arils", "category": "Fruit"},
+
+    # More dairy
+    {"name": "Low-Fat Milk", "calories": 102, "protein": 8, "carbs": 12, "fats": 2.4, "serving_size": "1 cup", "category": "Dairy"},
+    {"name": "Skim Milk", "calories": 83, "protein": 8, "carbs": 12, "fats": 0.2, "serving_size": "1 cup", "category": "Dairy"},
+    {"name": "Mozzarella Cheese", "calories": 85, "protein": 6, "carbs": 1, "fats": 6, "serving_size": "28g / 1 oz", "category": "Dairy"},
+    {"name": "Parmesan Cheese", "calories": 111, "protein": 10, "carbs": 1, "fats": 7, "serving_size": "28g / 1 oz", "category": "Dairy"},
+    {"name": "Vanilla Yogurt", "calories": 150, "protein": 6, "carbs": 24, "fats": 3, "serving_size": "1 cup", "category": "Dairy"},
+    {"name": "Chocolate Milk", "calories": 190, "protein": 8, "carbs": 26, "fats": 5, "serving_size": "1 cup", "category": "Dairy"},
+
+    # More legumes and nuts
+    {"name": "Chickpeas", "calories": 269, "protein": 14.5, "carbs": 45, "fats": 4.2, "serving_size": "1 cup cooked", "category": "Legumes"},
+    {"name": "Kidney Beans", "calories": 225, "protein": 15, "carbs": 40, "fats": 0.9, "serving_size": "1 cup cooked", "category": "Legumes"},
+    {"name": "Edamame", "calories": 188, "protein": 18, "carbs": 14, "fats": 8, "serving_size": "1 cup", "category": "Legumes"},
+    {"name": "Green Peas", "calories": 134, "protein": 8.5, "carbs": 25, "fats": 0.4, "serving_size": "1 cup", "category": "Legumes"},
+    {"name": "Cashews", "calories": 157, "protein": 5, "carbs": 9, "fats": 12, "serving_size": "28g / 1 oz", "category": "Nuts"},
+    {"name": "Walnuts", "calories": 185, "protein": 4.3, "carbs": 4, "fats": 18.5, "serving_size": "28g / 1 oz", "category": "Nuts"},
+    {"name": "Pistachios", "calories": 159, "protein": 6, "carbs": 8, "fats": 13, "serving_size": "28g / 1 oz", "category": "Nuts"},
+    {"name": "Trail Mix", "calories": 173, "protein": 4, "carbs": 15, "fats": 11, "serving_size": "1/4 cup", "category": "Nuts"},
+
+    # Salads and soups
+    {"name": "Caesar Salad", "calories": 180, "protein": 7, "carbs": 8, "fats": 14, "serving_size": "1 bowl", "category": "Salads"},
+    {"name": "Greek Salad", "calories": 211, "protein": 6, "carbs": 13, "fats": 15, "serving_size": "1 bowl", "category": "Salads"},
+    {"name": "Chicken Salad", "calories": 260, "protein": 24, "carbs": 9, "fats": 14, "serving_size": "1 bowl", "category": "Salads"},
+    {"name": "Cobb Salad", "calories": 320, "protein": 21, "carbs": 10, "fats": 21, "serving_size": "1 bowl", "category": "Salads"},
+    {"name": "Tomato Soup", "calories": 90, "protein": 2, "carbs": 18, "fats": 1.5, "serving_size": "1 cup", "category": "Soups"},
+    {"name": "Chicken Noodle Soup", "calories": 120, "protein": 7, "carbs": 14, "fats": 4, "serving_size": "1 cup", "category": "Soups"},
+    {"name": "Minestrone Soup", "calories": 110, "protein": 5, "carbs": 19, "fats": 2.5, "serving_size": "1 cup", "category": "Soups"},
+    {"name": "Hot and Sour Soup", "calories": 95, "protein": 4, "carbs": 12, "fats": 3, "serving_size": "1 cup", "category": "Soups"},
+
+    # Fast food and mains
+    {"name": "Cheeseburger", "calories": 303, "protein": 17, "carbs": 30, "fats": 14, "serving_size": "1 burger", "category": "Fast Food"},
+    {"name": "Veggie Burger", "calories": 250, "protein": 12, "carbs": 31, "fats": 9, "serving_size": "1 burger", "category": "Fast Food"},
+    {"name": "French Fries", "calories": 365, "protein": 4, "carbs": 48, "fats": 17, "serving_size": "1 medium serving", "category": "Fast Food"},
+    {"name": "Pizza Slice (cheese)", "calories": 285, "protein": 12, "carbs": 36, "fats": 10, "serving_size": "1 slice", "category": "Fast Food"},
+    {"name": "Pizza Slice (pepperoni)", "calories": 313, "protein": 13, "carbs": 35, "fats": 13, "serving_size": "1 slice", "category": "Fast Food"},
+    {"name": "Chicken Sandwich", "calories": 360, "protein": 24, "carbs": 32, "fats": 15, "serving_size": "1 sandwich", "category": "Fast Food"},
+    {"name": "Falafel Wrap", "calories": 330, "protein": 11, "carbs": 39, "fats": 14, "serving_size": "1 wrap", "category": "Fast Food"},
+    {"name": "Chicken Shawarma Wrap", "calories": 390, "protein": 24, "carbs": 33, "fats": 18, "serving_size": "1 wrap", "category": "Fast Food"},
+    {"name": "Tacos (beef)", "calories": 250, "protein": 13, "carbs": 20, "fats": 13, "serving_size": "2 tacos", "category": "Fast Food"},
+    {"name": "Burrito Bowl", "calories": 520, "protein": 28, "carbs": 54, "fats": 20, "serving_size": "1 bowl", "category": "Fast Food"},
+
+    # Pasta and noodle dishes
+    {"name": "Mac and Cheese", "calories": 310, "protein": 10, "carbs": 36, "fats": 14, "serving_size": "1 cup", "category": "Pasta"},
+    {"name": "Spaghetti Bolognese", "calories": 390, "protein": 20, "carbs": 48, "fats": 12, "serving_size": "1 plate", "category": "Pasta"},
+    {"name": "Fettuccine Alfredo", "calories": 415, "protein": 14, "carbs": 42, "fats": 21, "serving_size": "1 plate", "category": "Pasta"},
+    {"name": "Lasagna", "calories": 336, "protein": 19, "carbs": 30, "fats": 16, "serving_size": "1 slice", "category": "Pasta"},
+    {"name": "Vegetable Chow Mein", "calories": 310, "protein": 8, "carbs": 49, "fats": 9, "serving_size": "1 plate", "category": "Noodles"},
+    {"name": "Chicken Hakka Noodles", "calories": 360, "protein": 18, "carbs": 46, "fats": 11, "serving_size": "1 plate", "category": "Noodles"},
+    {"name": "Pad Thai", "calories": 357, "protein": 13, "carbs": 45, "fats": 14, "serving_size": "1 plate", "category": "Noodles"},
+    {"name": "Ramen", "calories": 430, "protein": 15, "carbs": 53, "fats": 17, "serving_size": "1 bowl", "category": "Noodles"},
+
+    # Desserts and bakery
+    {"name": "Chocolate Cake", "calories": 352, "protein": 5, "carbs": 50, "fats": 15, "serving_size": "1 slice", "category": "Desserts"},
+    {"name": "Cheesecake", "calories": 321, "protein": 6, "carbs": 25, "fats": 22, "serving_size": "1 slice", "category": "Desserts"},
+    {"name": "Brownie", "calories": 243, "protein": 3, "carbs": 33, "fats": 11, "serving_size": "1 piece", "category": "Desserts"},
+    {"name": "Ice Cream (vanilla)", "calories": 137, "protein": 2.3, "carbs": 16, "fats": 7, "serving_size": "1/2 cup", "category": "Desserts"},
+    {"name": "Donut", "calories": 260, "protein": 4, "carbs": 31, "fats": 14, "serving_size": "1 donut", "category": "Desserts"},
+    {"name": "Chocolate Chip Cookie", "calories": 160, "protein": 2, "carbs": 22, "fats": 7, "serving_size": "1 large cookie", "category": "Desserts"},
+    {"name": "Banana Bread", "calories": 196, "protein": 3, "carbs": 33, "fats": 6, "serving_size": "1 slice", "category": "Desserts"},
+
+    # Beverage expansion
+    {"name": "Black Coffee", "calories": 2, "protein": 0.3, "carbs": 0, "fats": 0, "serving_size": "1 cup (240ml)", "category": "Beverages"},
+    {"name": "Cappuccino", "calories": 80, "protein": 4, "carbs": 8, "fats": 3, "serving_size": "1 cup (240ml)", "category": "Beverages"},
+    {"name": "Latte", "calories": 120, "protein": 6, "carbs": 12, "fats": 4, "serving_size": "1 cup (240ml)", "category": "Beverages"},
+    {"name": "Iced Coffee", "calories": 90, "protein": 2, "carbs": 15, "fats": 2, "serving_size": "1 glass (300ml)", "category": "Beverages"},
+    {"name": "Green Tea", "calories": 2, "protein": 0, "carbs": 0, "fats": 0, "serving_size": "1 cup (240ml)", "category": "Beverages"},
+    {"name": "Lemonade", "calories": 99, "protein": 0, "carbs": 25, "fats": 0, "serving_size": "1 glass (250ml)", "category": "Beverages"},
+    {"name": "Orange Juice", "calories": 112, "protein": 1.7, "carbs": 26, "fats": 0.5, "serving_size": "1 glass (240ml)", "category": "Beverages"},
+    {"name": "Apple Juice", "calories": 114, "protein": 0.2, "carbs": 28, "fats": 0.3, "serving_size": "1 glass (240ml)", "category": "Beverages"},
+    {"name": "Coconut Water", "calories": 46, "protein": 1.7, "carbs": 9, "fats": 0.5, "serving_size": "1 glass (240ml)", "category": "Beverages"},
+    {"name": "Cola", "calories": 140, "protein": 0, "carbs": 39, "fats": 0, "serving_size": "1 can (330ml)", "category": "Beverages"},
+    {"name": "Diet Cola", "calories": 1, "protein": 0, "carbs": 0, "fats": 0, "serving_size": "1 can (330ml)", "category": "Beverages"},
+    {"name": "Chocolate Milkshake", "calories": 380, "protein": 9, "carbs": 52, "fats": 15, "serving_size": "1 glass (350ml)", "category": "Beverages"},
+    {"name": "Strawberry Smoothie", "calories": 180, "protein": 5, "carbs": 35, "fats": 2, "serving_size": "1 glass (300ml)", "category": "Beverages"},
+    {"name": "Protein Shake", "calories": 160, "protein": 24, "carbs": 8, "fats": 3, "serving_size": "1 shake", "category": "Beverages"},
+
+    # More Indian foods
+    {"name": "Misal Pav", "calories": 420, "protein": 14, "carbs": 58, "fats": 15, "serving_size": "1 plate", "category": "Indian Snacks"},
+    {"name": "Sabudana Khichdi", "calories": 320, "protein": 5, "carbs": 52, "fats": 10, "serving_size": "1 cup", "category": "Indian Breakfast"},
+    {"name": "Thepla", "calories": 130, "protein": 3.5, "carbs": 18, "fats": 5, "serving_size": "1 piece", "category": "Indian Breakfast"},
+    {"name": "Handvo", "calories": 210, "protein": 8, "carbs": 28, "fats": 7, "serving_size": "1 slice", "category": "Indian Snacks"},
+    {"name": "Undhiyu", "calories": 240, "protein": 7, "carbs": 24, "fats": 12, "serving_size": "1 cup", "category": "Indian Curry"},
+    {"name": "Kolhapuri Chicken", "calories": 295, "protein": 27, "carbs": 8, "fats": 17, "serving_size": "1 cup", "category": "Indian Curry"},
+    {"name": "Egg Curry", "calories": 220, "protein": 12, "carbs": 8, "fats": 15, "serving_size": "1 cup", "category": "Indian Curry"},
+    {"name": "Malai Kofta", "calories": 360, "protein": 10, "carbs": 26, "fats": 24, "serving_size": "1 cup", "category": "Indian Curry"},
+    {"name": "Kofta Curry", "calories": 300, "protein": 12, "carbs": 22, "fats": 18, "serving_size": "1 cup", "category": "Indian Curry"},
+    {"name": "Amritsari Kulcha", "calories": 310, "protein": 9, "carbs": 48, "fats": 9, "serving_size": "1 kulcha", "category": "North Indian"},
+    {"name": "Kulfi", "calories": 180, "protein": 4, "carbs": 22, "fats": 8, "serving_size": "1 stick", "category": "Indian Sweets"},
+    {"name": "Rabri", "calories": 260, "protein": 7, "carbs": 28, "fats": 13, "serving_size": "1/2 cup", "category": "Indian Sweets"},
+    {"name": "Thandai", "calories": 210, "protein": 6, "carbs": 24, "fats": 10, "serving_size": "1 glass (250ml)", "category": "Indian Drinks"},
+    {"name": "Sugarcane Juice", "calories": 180, "protein": 0, "carbs": 45, "fats": 0, "serving_size": "1 glass (300ml)", "category": "Indian Drinks"},
+    {"name": "Filter Coffee", "calories": 85, "protein": 3, "carbs": 11, "fats": 3, "serving_size": "1 tumbler (180ml)", "category": "Indian Drinks"},
 ]
 
 
