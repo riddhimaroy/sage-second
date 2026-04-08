@@ -28,17 +28,32 @@ class NutritionTotalsSerializer(serializers.Serializer):
 
 class DailyLogSerializer(serializers.ModelSerializer):
     """Serializes a DailyLog with its entries and computed totals."""
-    entries = LogEntrySerializer(many=True, read_only=True)
+    # REPLACED
+    entries = serializers.SerializerMethodField()
     totals = serializers.SerializerMethodField()
 
     class Meta:
         model = DailyLog
         fields = ["id", "date", "entries", "totals"]
 
+    def _get_user_scoped_entries(self, obj):
+        """
+        Always scope serialized entries to the DailyLog owner first so a shared
+        serializer context can never leak another user's rows.
+        """
+        entries_qs = obj.entries.select_related("meal").filter(user=obj.user)
+        request = self.context.get("request")
+        if request and request.user.is_authenticated:
+            entries_qs = entries_qs.filter(user=request.user)
+        return entries_qs
+
+    def get_entries(self, obj):
+        return LogEntrySerializer(self._get_user_scoped_entries(obj), many=True).data
+
     def get_totals(self, obj):
         """Compute the sum of calories, protein, carbs, fats for all entries."""
         totals = {"calories": 0.0, "protein": 0.0, "carbs": 0.0, "fats": 0.0}
-        for entry in obj.entries.select_related("meal").all():
+        for entry in self._get_user_scoped_entries(obj):
             q = entry.quantity
             totals["calories"] += entry.meal.calories * q
             totals["protein"] += entry.meal.protein * q

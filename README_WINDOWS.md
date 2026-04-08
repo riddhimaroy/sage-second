@@ -281,6 +281,8 @@ pnpm install
 Start the frontend:
 
 ```cmd
+$env:PORT=3000
+$env:BASE_PATH="/"
 pnpm --filter @workspace/sage run dev
 ```
 

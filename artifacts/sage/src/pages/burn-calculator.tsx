@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { EXERCISES, calcBurnTime } from "@/utils/health";
-import { useGetTodayLog } from "@workspace/api-client-react";
+import { getGetTodayLogQueryKey, useGetTodayLog } from "@workspace/api-client-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { computeGoals, DEFAULT_GOALS } from "@/utils/health";
 
@@ -18,8 +18,10 @@ function formatTime(mins: number): string {
 
 export default function BurnCalculator() {
   const [extraInput, setExtraInput] = useState("");
-  const { data: todayLog } = useGetTodayLog();
-  const { profile } = useAuth();
+  const { profile, username } = useAuth();
+  const { data: todayLog } = useGetTodayLog({
+    query: { queryKey: [...getGetTodayLogQueryKey(), username ?? "guest"] },
+  });
 
   const goals =
     profile?.age && profile?.gender && profile?.height_cm && profile?.weight_kg && profile?.activity_level && profile?.goal

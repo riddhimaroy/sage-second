@@ -24,7 +24,7 @@ const GOAL_OPTIONS = [
 ];
 
 export default function ProfileSetup() {
-  const { token, profile, setProfile } = useAuth();
+  const { token, profile, setProfile, logout } = useAuth();
   const [, navigate] = useLocation();
   const { toast } = useToast();
 
@@ -93,7 +93,30 @@ export default function ProfileSetup() {
       });
       const data = await res.json();
       if (!res.ok) {
-        toast({ title: "Error saving profile", description: "Please check your inputs.", variant: "destructive" });
+        if (res.status === 401) {
+          await logout();
+          toast({
+            title: "Session expired",
+            description: "Please sign in again, then save your profile.",
+            variant: "destructive",
+          });
+          navigate("/auth");
+          return;
+        }
+
+        const firstFieldError = Object.values(data).find(
+          (value) => Array.isArray(value) && typeof value[0] === "string",
+        ) as string[] | undefined;
+        const description =
+          data.error ||
+          firstFieldError?.[0] ||
+          "Please check your inputs.";
+
+        toast({
+          title: "Error saving profile",
+          description,
+          variant: "destructive",
+        });
         return;
       }
       setProfile({

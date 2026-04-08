@@ -37,6 +37,8 @@ class LogEntry(models.Model):
     Quantity is a multiplier applied to the meal's per-serving nutrition data.
     E.g., quantity=2.0 means 2 servings of the meal.
     """
+    # ADDED
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="log_entries")
     meal = models.ForeignKey(Meal, on_delete=models.CASCADE, related_name="log_entries")
     daily_log = models.ForeignKey(DailyLog, on_delete=models.CASCADE, related_name="entries")
     quantity = models.FloatField(default=1.0, help_text="Number of servings consumed")

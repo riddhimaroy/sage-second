@@ -1,7 +1,7 @@
 import { AppLayout } from "@/components/layout/AppLayout";
 import { NutritionSummary } from "@/components/dashboard/NutritionSummary";
 import { MealSearch } from "@/components/meals/MealSearch";
-import { useGetTodayLog } from "@workspace/api-client-react";
+import { getGetTodayLogQueryKey, useGetTodayLog } from "@workspace/api-client-react";
 import { format } from "date-fns";
 import { Link } from "wouter";
 import { ArrowRight, UtensilsCrossed } from "lucide-react";
@@ -9,8 +9,10 @@ import { useAuth } from "@/contexts/AuthContext";
 import { computeGoals, DEFAULT_GOALS } from "@/utils/health";
 
 export default function Dashboard() {
-  const { data: todayLog, isLoading } = useGetTodayLog();
-  const { profile } = useAuth();
+  const { profile, username } = useAuth();
+  const { data: todayLog, isLoading } = useGetTodayLog({
+    query: { queryKey: [...getGetTodayLogQueryKey(), username ?? "guest"] },
+  });
 
   const goals =
     profile?.age && profile?.gender && profile?.height_cm && profile?.weight_kg && profile?.activity_level && profile?.goal

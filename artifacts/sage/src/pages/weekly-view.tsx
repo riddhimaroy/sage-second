@@ -10,9 +10,13 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function WeeklyView() {
-  const { data: weeklyData, isLoading, error } = useGetWeeklyLogs();
+  const { username } = useAuth();
+  const { data: weeklyData, isLoading, error } = useGetWeeklyLogs({
+    query: { queryKey: [...getGetWeeklyLogsQueryKey(), username ?? "guest"] },
+  });
   const cleanupMutation = useCleanupOldLogs();
   const { toast } = useToast();
   const queryClient = useQueryClient();

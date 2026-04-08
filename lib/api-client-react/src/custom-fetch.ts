@@ -30,9 +30,9 @@ export function setBaseUrl(url: string | null): void {
 }
 
 /**
- * Register a getter that supplies a bearer auth token.  Before every fetch
+ * Register a getter that supplies an auth token. Before every fetch
  * the getter is invoked; when it returns a non-null string, an
- * `Authorization: Bearer <token>` header is attached to the request.
+ * `Authorization: Token <token>` header is attached to the request.
  *
  * Useful for Expo bundles making token-gated API calls.
  * Pass `null` to clear the getter.
@@ -349,12 +349,12 @@ export async function customFetch<T = unknown>(
     headers.set("accept", DEFAULT_JSON_ACCEPT);
   }
 
-  // Attach bearer token when an auth getter is configured and no
+  // FIXED: attach DRF token auth header when an auth getter is configured and no
   // Authorization header has been explicitly provided.
   if (_authTokenGetter && !headers.has("authorization")) {
     const token = await _authTokenGetter();
     if (token) {
-      headers.set("authorization", `Bearer ${token}`);
+      headers.set("authorization", `Token ${token}`);
     }
   }
 

@@ -23,10 +23,10 @@ function ProtectedRoute({ component: Component }: { component: React.ComponentTy
 }
 
 function Router() {
-  const { isLoggedIn, profileComplete } = useAuth();
+  const { isLoggedIn, profileComplete, username } = useAuth();
 
   return (
-    <Switch>
+    <Switch key={username ?? "guest"}>
       <Route path="/auth">
         {isLoggedIn && profileComplete ? <Redirect to="/" /> : <AuthPage />}
       </Route>

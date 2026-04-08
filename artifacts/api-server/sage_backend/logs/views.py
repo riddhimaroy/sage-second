@@ -4,7 +4,9 @@ Handles daily food logging, weekly summaries, and auto-cleanup.
 """
 
 from datetime import date, timedelta
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from meals.models import Meal
@@ -17,12 +19,13 @@ def today_str():
     return date.today().isoformat()
 
 
-def get_or_create_daily_log(date_str):
+def get_or_create_daily_log(user, date_str):
     """
     Get or create a DailyLog for the given date string.
     Returns the DailyLog instance.
     """
-    log, _ = DailyLog.objects.get_or_create(date=date_str)
+    # FIXED: make daily logs user-specific
+    log, _ = DailyLog.objects.get_or_create(user=user, date=date_str)
     return log
 
 
@@ -41,6 +44,8 @@ def compute_totals(entries_qs):
     return totals
 
 
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 @api_view(["GET"])
 def get_today_log(request):
     """
@@ -48,11 +53,14 @@ def get_today_log(request):
     Returns today's DailyLog with all entries and computed nutrition totals.
     Creates the daily log automatically if it doesn't exist yet.
     """
-    daily_log = get_or_create_daily_log(today_str())
-    serializer = DailyLogSerializer(daily_log)
+    # FIXED: fetch today's log for the logged-in user only
+    daily_log = get_or_create_daily_log(request.user, today_str())
+    serializer = DailyLogSerializer(daily_log, context={"request": request})
     return Response(serializer.data)
 
 
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 @api_view(["POST"])
 def add_log_entry(request):
     """
@@ -80,8 +88,10 @@ def add_log_entry(request):
     except Meal.DoesNotExist:
         return Response({"error": "Meal not found"}, status=status.HTTP_404_NOT_FOUND)
 
-    daily_log = get_or_create_daily_log(today_str())
-    entry = LogEntry.objects.create(meal=meal, daily_log=daily_log, quantity=quantity)
+    # FIXED: create entry inside the current user's daily log
+    daily_log = get_or_create_daily_log(request.user, today_str())
+    # FIXED: tie each entry directly to the logged-in user
+    entry = LogEntry.objects.create(user=request.user, meal=meal, daily_log=daily_log, quantity=quantity)
 
     return Response(
         {
@@ -104,6 +114,8 @@ def add_log_entry(request):
     )
 
 
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 @api_view(["DELETE"])
 def remove_log_entry(request, entry_id):
     """
@@ -111,7 +123,8 @@ def remove_log_entry(request, entry_id):
     Remove a specific log entry by its ID.
     """
     try:
-        entry = LogEntry.objects.get(pk=entry_id)
+        # FIXED: only allow deleting the logged-in user's entry
+        entry = LogEntry.objects.get(pk=entry_id, daily_log__user=request.user, user=request.user)
     except LogEntry.DoesNotExist:
         return Response({"error": "Log entry not found"}, status=status.HTTP_404_NOT_FOUND)
 
@@ -119,6 +132,8 @@ def remove_log_entry(request, entry_id):
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 @api_view(["PATCH"])
 def update_log_entry(request, entry_id):
     """
@@ -127,7 +142,8 @@ def update_log_entry(request, entry_id):
     Update the quantity (serving size) of an existing log entry.
     """
     try:
-        entry = LogEntry.objects.select_related("meal").get(pk=entry_id)
+        # FIXED: only allow updating the logged-in user's entry
+        entry = LogEntry.objects.select_related("meal").get(pk=entry_id, daily_log__user=request.user, user=request.user)
     except LogEntry.DoesNotExist:
         return Response({"error": "Log entry not found"}, status=status.HTTP_404_NOT_FOUND)
 
@@ -163,6 +179,8 @@ def update_log_entry(request, entry_id):
     )
 
 
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 @api_view(["GET"])
 def get_daily_logs(request):
     """
@@ -170,11 +188,14 @@ def get_daily_logs(request):
     Returns the DailyLog for a specific date (defaults to today).
     """
     date_str = request.query_params.get("date", today_str())
-    daily_log = get_or_create_daily_log(date_str)
-    serializer = DailyLogSerializer(daily_log)
+    # FIXED: fetch the requested date for the logged-in user only
+    daily_log = get_or_create_daily_log(request.user, date_str)
+    serializer = DailyLogSerializer(daily_log, context={"request": request})
     return Response(serializer.data)
 
 
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 @api_view(["GET"])
 def get_weekly_logs(request):
     """
@@ -191,8 +212,9 @@ def get_weekly_logs(request):
 
     for day_str in days:
         try:
-            log = DailyLog.objects.get(date=day_str)
-            entries_qs = LogEntry.objects.filter(daily_log=log)
+            # FIXED: summary must only include the logged-in user's logs
+            log = DailyLog.objects.get(user=request.user, date=day_str)
+            entries_qs = LogEntry.objects.filter(daily_log=log, user=request.user)
             totals = compute_totals(entries_qs)
             entry_count = entries_qs.count()
         except DailyLog.DoesNotExist:
@@ -233,6 +255,8 @@ def get_weekly_logs(request):
     return Response(serializer.data)
 
 
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 @api_view(["POST"])
 def cleanup_old_logs(request):
     """
@@ -241,7 +265,8 @@ def cleanup_old_logs(request):
     Useful for keeping the database lean.
     """
     cutoff = (date.today() - timedelta(days=7)).isoformat()
-    deleted_qs = DailyLog.objects.filter(date__lt=cutoff)
+    # FIXED: only delete old logs belonging to the logged-in user
+    deleted_qs = DailyLog.objects.filter(user=request.user, date__lt=cutoff)
     count = deleted_qs.count()
     deleted_qs.delete()
 
@@ -253,6 +278,8 @@ def cleanup_old_logs(request):
     )
 
 
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 @api_view(["GET"])
 def get_daily_summary(request):
     """
@@ -262,8 +289,9 @@ def get_daily_summary(request):
     """
     today = today_str()
     try:
-        log = DailyLog.objects.get(date=today)
-        totals = compute_totals(LogEntry.objects.filter(daily_log=log))
+        # FIXED: summary must be user-specific
+        log = DailyLog.objects.get(user=request.user, date=today)
+        totals = compute_totals(LogEntry.objects.filter(daily_log=log, user=request.user))
     except DailyLog.DoesNotExist:
         totals = {"calories": 0.0, "protein": 0.0, "carbs": 0.0, "fats": 0.0}
 

@@ -1,14 +1,18 @@
 import { AppLayout } from "@/components/layout/AppLayout";
-import { useGetTodayLog } from "@workspace/api-client-react";
+import { getGetTodayLogQueryKey, useGetTodayLog } from "@workspace/api-client-react";
 import { LogEntryItem } from "@/components/meals/LogEntryItem";
 import { format } from "date-fns";
 import { BookOpen, AlertCircle } from "lucide-react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function DailyLog() {
-  const { data: todayLog, isLoading, error } = useGetTodayLog();
+  const { username } = useAuth();
+  const { data: todayLog, isLoading, error } = useGetTodayLog({
+    query: { queryKey: [...getGetTodayLogQueryKey(), username ?? "guest"] },
+  });
 
   return (
     <AppLayout>

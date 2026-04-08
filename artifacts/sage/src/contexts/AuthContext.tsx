@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
+import { setAuthTokenGetter } from "@workspace/api-client-react";
+import { useQueryClient } from "@tanstack/react-query";
 
 export interface UserProfile {
   age: number | null;
@@ -33,6 +35,7 @@ const USERNAME_KEY = "sage_username";
 const PROFILE_KEY = "sage_profile";
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const queryClient = useQueryClient();
   const [state, setState] = useState<AuthState>(() => {
     const token = localStorage.getItem(TOKEN_KEY);
     const username = localStorage.getItem(USERNAME_KEY);
@@ -40,6 +43,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const profile = raw ? (JSON.parse(raw) as UserProfile) : null;
     return { token, username, profile, profileComplete: false };
   });
+
+  useEffect(() => {
+    // ADDED: ensure generated API client sends the logged-in user's token
+    setAuthTokenGetter(() => localStorage.getItem(TOKEN_KEY));
+    return () => setAuthTokenGetter(null);
+  }, []);
 
   const refetchProfile = useCallback(async () => {
     const token = localStorage.getItem(TOKEN_KEY);
@@ -68,14 +77,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
-    if (state.token) refetchProfile();
-  }, []);
+    // FIXED: refetch the current user's profile whenever the auth token changes
+    if (state.token) {
+      refetchProfile();
+    }
+  }, [state.token, refetchProfile]);
 
   const login = useCallback((token: string, username: string, profileComplete: boolean) => {
     localStorage.setItem(TOKEN_KEY, token);
     localStorage.setItem(USERNAME_KEY, username);
+    // FIXED: prevent the next user from seeing cached queries from the previous user
+    queryClient.cancelQueries();
+    queryClient.removeQueries();
+    queryClient.clear();
     setState({ token, username, profile: null, profileComplete });
-  }, []);
+  }, [queryClient]);
 
   const logout = useCallback(async () => {
     const token = localStorage.getItem(TOKEN_KEY);
@@ -90,8 +106,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(USERNAME_KEY);
     localStorage.removeItem(PROFILE_KEY);
+    // FIXED: clear user-specific cached logs/profile data on logout
+    queryClient.cancelQueries();
+    queryClient.removeQueries();
+    queryClient.clear();
     setState({ token: null, username: null, profile: null, profileComplete: false });
-  }, []);
+  }, [queryClient]);
 
   const setProfile = useCallback((profile: UserProfile, complete: boolean) => {
     localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
