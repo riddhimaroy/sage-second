@@ -14,7 +14,7 @@ export function MealSearch() {
   const [query, setQuery] = useState("");
   const debouncedQuery = useDebounce(query, 300);
   const [selectedMeal, setSelectedMeal] = useState<Meal | null>(null);
-  const [quantity, setQuantity] = useState("1.0");
+  const [quantity, setQuantity] = useState("1");
 
   const { data: meals, isLoading } = useSearchMeals(
     { q: debouncedQuery },
@@ -24,21 +24,21 @@ export function MealSearch() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const addLogEntry = useAddLogEntry();
+  const quantityNumber = Number.parseInt(quantity, 10);
+  const isValidQuantity = Number.isInteger(quantityNumber) && quantityNumber > 0;
 
   const handleAddMeal = () => {
     if (!selectedMeal) return;
-    
-    const qtyNum = parseFloat(quantity);
-    if (isNaN(qtyNum) || qtyNum <= 0) return;
+    if (!isValidQuantity) return;
 
     addLogEntry.mutate(
-      { data: { mealId: selectedMeal.id, quantity: qtyNum } },
+      { data: { mealId: selectedMeal.id, quantity: quantityNumber } },
       {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: getGetTodayLogQueryKey() });
           toast({
             title: "Meal logged",
-            description: `Added ${qtyNum}x ${selectedMeal.name} to your daily log.`,
+            description: `Added ${quantityNumber}x ${selectedMeal.name} to your daily log.`,
           });
           setSelectedMeal(null);
           setQuery("");
@@ -86,7 +86,7 @@ export function MealSearch() {
                   className="flex items-center justify-between p-3 rounded-lg hover:bg-secondary transition-colors group cursor-pointer"
                   onClick={() => {
                     setSelectedMeal(meal);
-                    setQuantity("1.0");
+                    setQuantity("1");
                   }}
                   data-testid={`search-result-${meal.id}`}
                 >
@@ -125,19 +125,19 @@ export function MealSearch() {
               <div className="grid grid-cols-4 gap-2 mb-6">
                 <div className="bg-secondary p-2 rounded text-center">
                   <div className="text-xs text-muted-foreground mb-1">Cals</div>
-                  <div className="font-medium">{Math.round(selectedMeal.calories * parseFloat(quantity || "0"))}</div>
+                  <div className="font-medium">{Math.round(selectedMeal.calories * (isValidQuantity ? quantityNumber : 0))}</div>
                 </div>
                 <div className="bg-secondary p-2 rounded text-center">
                   <div className="text-xs text-muted-foreground mb-1">Pro</div>
-                  <div className="font-medium">{Math.round(selectedMeal.protein * parseFloat(quantity || "0"))}g</div>
+                  <div className="font-medium">{Math.round(selectedMeal.protein * (isValidQuantity ? quantityNumber : 0))}g</div>
                 </div>
                 <div className="bg-secondary p-2 rounded text-center">
                   <div className="text-xs text-muted-foreground mb-1">Carb</div>
-                  <div className="font-medium">{Math.round(selectedMeal.carbs * parseFloat(quantity || "0"))}g</div>
+                  <div className="font-medium">{Math.round(selectedMeal.carbs * (isValidQuantity ? quantityNumber : 0))}g</div>
                 </div>
                 <div className="bg-secondary p-2 rounded text-center">
                   <div className="text-xs text-muted-foreground mb-1">Fat</div>
-                  <div className="font-medium">{Math.round(selectedMeal.fats * parseFloat(quantity || "0"))}g</div>
+                  <div className="font-medium">{Math.round(selectedMeal.fats * (isValidQuantity ? quantityNumber : 0))}g</div>
                 </div>
               </div>
 
@@ -145,8 +145,8 @@ export function MealSearch() {
                 <label className="text-sm font-medium w-24">Servings</label>
                 <Input
                   type="number"
-                  min="0.1"
-                  step="0.1"
+                  min="1"
+                  step="1"
                   value={quantity}
                   onChange={(e) => setQuantity(e.target.value)}
                   className="flex-1"
@@ -160,7 +160,7 @@ export function MealSearch() {
             <Button variant="outline" onClick={() => setSelectedMeal(null)}>Cancel</Button>
             <Button 
               onClick={handleAddMeal} 
-              disabled={addLogEntry.isPending || !quantity || parseFloat(quantity) <= 0}
+              disabled={addLogEntry.isPending || !isValidQuantity}
               data-testid="button-confirm-add"
             >
               {addLogEntry.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Plus className="w-4 h-4 mr-2" />}

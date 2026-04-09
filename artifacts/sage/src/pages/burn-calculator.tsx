@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Flame, Timer } from "lucide-react";
+import { Accessibility, Activity, Bike, Flame, Footprints, StretchVertical, Timer, type LucideIcon } from "lucide-react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -15,6 +15,14 @@ function formatTime(mins: number): string {
   const m = mins % 60;
   return m === 0 ? `${h} hr` : `${h} hr ${m} min`;
 }
+
+const exerciseIcons: Record<string, LucideIcon> = {
+  Walking: Footprints,
+  Running: Activity,
+  Cycling: Bike,
+  Skipping: Accessibility,
+  Yoga: StretchVertical,
+};
 
 export default function BurnCalculator() {
   const [extraInput, setExtraInput] = useState("");
@@ -115,10 +123,13 @@ export default function BurnCalculator() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {EXERCISES.map((ex) => {
                 const mins = calcBurnTime(extra, ex.caloriesPer30Min);
+                const Icon = exerciseIcons[ex.name] ?? Flame;
                 return (
                   <Card key={ex.name} className="shadow-none hover:border-primary/40 transition-colors">
                     <CardContent className="flex items-center gap-4 py-4">
-                      <span className="text-3xl">{ex.emoji}</span>
+                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
+                        <Icon className="h-6 w-6" />
+                      </div>
                       <div className="flex-1">
                         <div className="font-semibold text-foreground">{ex.name}</div>
                         <div className="text-xs text-muted-foreground">{ex.caloriesPer30Min} kcal / 30 min</div>

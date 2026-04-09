@@ -21,13 +21,14 @@ export function LogEntryItem({ entry }: LogEntryItemProps) {
   const removeEntry = useRemoveLogEntry();
   const queryClient = useQueryClient();
   const { toast } = useToast();
+  const editQuantityNumber = Number.parseInt(editQuantity, 10);
+  const isValidEditQuantity = Number.isInteger(editQuantityNumber) && editQuantityNumber > 0;
 
   const handleUpdate = () => {
-    const qty = parseFloat(editQuantity);
-    if (isNaN(qty) || qty <= 0) return;
+    if (!isValidEditQuantity) return;
 
     updateEntry.mutate(
-      { entryId: entry.id, data: { quantity: qty } },
+      { entryId: entry.id, data: { quantity: editQuantityNumber } },
       {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: getGetTodayLogQueryKey() });
@@ -133,8 +134,8 @@ export function LogEntryItem({ entry }: LogEntryItemProps) {
               <label className="text-sm font-medium w-20">Servings</label>
               <Input
                 type="number"
-                min="0.1"
-                step="0.1"
+                min="1"
+                step="1"
                 value={editQuantity}
                 onChange={(e) => setEditQuantity(e.target.value)}
                 data-testid={`input-edit-quantity-${entry.id}`}
@@ -146,7 +147,7 @@ export function LogEntryItem({ entry }: LogEntryItemProps) {
             <Button variant="outline" onClick={() => setIsEditing(false)}>Cancel</Button>
             <Button 
               onClick={handleUpdate} 
-              disabled={updateEntry.isPending || !editQuantity || parseFloat(editQuantity) <= 0}
+              disabled={updateEntry.isPending || !isValidEditQuantity}
               data-testid={`button-save-edit-${entry.id}`}
             >
               {updateEntry.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
