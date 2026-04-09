@@ -1,8 +1,0 @@
-uploads = []
-generated = []
-
-[[outputs]]
-id = "hhAWOe4NvEnYrOJJkn6gZ"
-uri = "file://README_WINDOWS.md"
-type = "text"
-title = "SAGE — Windows Setup Guide"

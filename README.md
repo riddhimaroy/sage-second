@@ -93,18 +93,6 @@ PORT=8080
 ### 4. Run the backend (Django)
 
 ```bash
-# From the api-server directory
-bash start_django.sh
-```
-
-This script will:
-1. Apply all database migrations
-2. Seed the meal database (Indian foods + international items, ~160 entries)
-3. Start the Django development server on `http://localhost:8080`
-
-Or run each step manually:
-
-```bash
 cd sage_backend
 
 python manage.py migrate --noinput
